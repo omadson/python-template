@@ -4,9 +4,10 @@
 tag_format = "v{version}"
 commit_parser = "conventional"
 build_command = ""
+allow_zero_version = true
 
 [tool.semantic_release.branches.main]
 match = "main"
 
-[tool.semantic_release.changelog]
+[tool.semantic_release.changelog.default_templates]
 changelog_file = "CHANGELOG.md"
