@@ -1,0 +1,61 @@
+_min_copier_version: "9.0.0"
+_subdirectory: template
+_templates_suffix: ".jinja"
+
+_tasks:
+  - "git init -q"
+  - "uv sync"
+  - "uv run pre-commit install --hook-type pre-commit --hook-type commit-msg"
+
+package_name:
+  type: str
+  help: "Nome do pacote/projeto (ex: meu-pacote)"
+  validator: >-
+    {% if not (package_name | regex_search('^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$')) %}
+    package_name deve conter apenas minúsculas, dígitos, ".", "_" ou "-" (nome PyPI válido)
+    {% endif %}
+
+package_module:
+  type: str
+  help: "Nome do módulo Python (ex: meu_pacote)"
+  default: "{{ package_name.replace('-', '_') }}"
+  validator: >-
+    {% if not (package_module | regex_search('^[a-z_][a-z0-9_]*$')) %}
+    package_module deve ser um identificador Python válido (minúsculas, dígitos, "_", não pode começar com dígito)
+    {% endif %}
+
+description:
+  type: str
+  help: "Descrição curta do projeto"
+  default: "TODO"
+
+author_name:
+  type: str
+  default: "Madson Dias"
+
+author_email:
+  type: str
+  default: "madsonddias@gmail.com"
+
+github_user:
+  type: str
+  default: "omadson"
+
+python_version:
+  type: str
+  default: "3.13"
+
+year:
+  type: int
+  default: 2026
+
+license:
+  type: str
+  help: "Licença do projeto"
+  choices:
+    MIT: MIT
+    Apache-2.0: Apache-2.0
+    BSD-3-Clause: BSD-3-Clause
+    GPL-3.0-or-later: GPL-3.0-or-later
+    Nenhuma: none
+  default: MIT

@@ -1,0 +1,12 @@
+# Config de release DO TEMPLATE (não é um pacote Python; não é copiado para
+# projetos gerados — o Copier só copia `template/`, via `_subdirectory`).
+[tool.semantic_release]
+tag_format = "v{version}"
+commit_parser = "conventional"
+build_command = ""
+
+[tool.semantic_release.branches.main]
+match = "main"
+
+[tool.semantic_release.changelog]
+changelog_file = "CHANGELOG.md"

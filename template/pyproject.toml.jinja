@@ -1,0 +1,102 @@
+[project]
+name = "{{ package_name }}"
+version = "0.1.0"
+description = "{{ description }}"
+authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
+requires-python = ">=3.9,<4"
+readme = "README.md"
+{% if license != "none" -%}
+license = "{{ license }}"
+{% endif -%}
+keywords = []
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/{{ github_user }}/{{ package_name }}"
+Documentation = "https://{{ package_name }}.readthedocs.io/en/latest/"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=3.6.2,<4",
+    "pytest>=8.1.1,<9",
+    "pytest-cov>=4.1.0,<5",
+    "ruff>=0.9,<1",
+    "mypy>=1.9.0,<2",
+    "python-semantic-release>=9.2.0,<10",
+    "interrogate>=1.5.0,<2",
+    "mkdocs>=1.5.3,<2",
+    "mkdocs-material>=9.5.14,<10",
+    "mkdocstrings>=0.24.1,<0.25",
+]
+
+[tool.uv]
+default-groups = "all"
+
+[tool.uv.build-backend]
+module-name = ["{{ package_module }}"]
+module-root = ""
+source-include = [{% if license != "none" %}"LICENSE"{% endif %}]
+
+[build-system]
+requires = ["uv_build>=0.9.17,<0.10.0"]
+build-backend = "uv_build"
+
+
+[tool.semantic_release]
+version_variables = [
+    '{{ package_module }}/__init__.py:__version__',
+]
+version_toml = ["pyproject.toml:project.version"]
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease_token = "rc"
+prerelease = false
+build_command = ""
+
+[tool.semantic_release.publish]
+upload_to_vcs_release = true
+
+[tool.semantic_release.changelog]
+changelog_file = "docs/CHANGELOG.md"
+
+[tool.mypy]
+
+[tool.ruff]
+line-length = 79
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+
+[tool.coverage.report]
+omit = ['{{ package_module }}/__init__.py']
+fail_under = 70
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = true
+ignore-private = true
+ignore-property-decorators = true
+ignore-module = false
+ignore-nested-functions = false
+ignore-nested-classes = true
+ignore-setters = false
+fail-under = 95
+exclude = ["setup.py", "docs", "build"]
+ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+verbose = 2
+quiet = false
+whitelist-regex = []
+color = true
+omit-covered-files = false

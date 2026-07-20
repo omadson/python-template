@@ -1,0 +1,25 @@
+name: Release template
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.RELEASE_TOKEN }}
+
+    - name: Python Semantic Release
+      uses: python-semantic-release/python-semantic-release@v9.21.0
+      with:
+        github_token: ${{ secrets.RELEASE_TOKEN }}
