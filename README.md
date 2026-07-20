@@ -19,14 +19,24 @@ copier update
 
 On the generated project's GitHub repo, set the `RELEASE_TOKEN` secret (a PAT with push/release permission) and `PYPI_TOKEN` (if publishing to PyPI).
 
-## What's included (in the generated project)
+## Structure
 
-- `.pre-commit-config.yaml` — ruff (lint + format), mypy, interrogate, conventional-pre-commit, coverage via pytest.
-- `pyproject.toml` — dev dependencies, coverage/interrogate/mypy/ruff config, and `[tool.semantic_release]` already pointing at the versioning source in `pyproject.toml` + `__init__.py`.
-- `.github/workflows/ci.yml` — commitlint, tests with coverage, lint (ruff).
-- `.github/workflows/release.yml` — python-semantic-release on the `main` branch, with optional PyPI publish.
-- `commitlint.config.cjs` — Conventional Commits.
-- `CONTRIBUTING.md`, `.gitignore`, `LICENSE` (as chosen), `mkdocs.yml` + `docs/`.
+```
+.
+├── commitlint.config.cjs
+├── CONTRIBUTING.md
+├── docs
+│   └── index.md
+├── LICENSE
+├── my_package
+│   └── __init__.py
+├── mkdocs.yml
+├── pyproject.toml
+├── README.md
+├── tests
+│   └── test_version.py
+└── uv.lock
+```
 
 ## Versioning the template
 
