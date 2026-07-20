@@ -1,5 +1,5 @@
-# Config de release DO TEMPLATE (não é um pacote Python; não é copiado para
-# projetos gerados — o Copier só copia `template/`, via `_subdirectory`).
+# Release config for THE TEMPLATE ITSELF (not a Python package; not copied
+# into generated projects — Copier only copies `template/`, via `_subdirectory`).
 [tool.semantic_release]
 tag_format = "v{version}"
 commit_parser = "conventional"

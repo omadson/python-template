@@ -9,24 +9,24 @@ _tasks:
 
 package_name:
   type: str
-  help: "Nome do pacote/projeto (ex: meu-pacote)"
+  help: "Package/project name (e.g. my-package)"
   validator: >-
     {% if not (package_name | regex_search('^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$')) %}
-    package_name deve conter apenas minúsculas, dígitos, ".", "_" ou "-" (nome PyPI válido)
+    package_name must contain only lowercase letters, digits, ".", "_" or "-" (valid PyPI name)
     {% endif %}
 
 package_module:
   type: str
-  help: "Nome do módulo Python (ex: meu_pacote)"
+  help: "Python module name (e.g. my_package)"
   default: "{{ package_name.replace('-', '_') }}"
   validator: >-
     {% if not (package_module | regex_search('^[a-z_][a-z0-9_]*$')) %}
-    package_module deve ser um identificador Python válido (minúsculas, dígitos, "_", não pode começar com dígito)
+    package_module must be a valid Python identifier (lowercase, digits, "_", can't start with a digit)
     {% endif %}
 
 description:
   type: str
-  help: "Descrição curta do projeto"
+  help: "Short project description"
   default: "TODO"
 
 author_name:
@@ -51,11 +51,11 @@ year:
 
 license:
   type: str
-  help: "Licença do projeto"
+  help: "Project license"
   choices:
     MIT: MIT
     Apache-2.0: Apache-2.0
     BSD-3-Clause: BSD-3-Clause
     GPL-3.0-or-later: GPL-3.0-or-later
-    Nenhuma: none
+    "None": none
   default: MIT

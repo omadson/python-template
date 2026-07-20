@@ -1,50 +1,50 @@
 # python-template
 
-Template [Copier](https://copier.readthedocs.io/) para criação de projetos Python (uv + pre-commit + python-semantic-release + CI/CD).
+[Copier](https://copier.readthedocs.io/) template for creating Python projects (uv + pre-commit + python-semantic-release + CI/CD).
 
-## Uso
+## Usage
 
 ```bash
-uv tool install copier  # ou: pipx install copier
-copier copy --trust gh:omadson/python-template destino/
+uv tool install copier  # or: pipx install copier
+copier copy --trust gh:omadson/python-template destination/
 ```
 
-O Copier vai perguntar `package_name`, `package_module`, `description`, `author_name`, `author_email`, `github_user`, `python_version`, `year` e `license` (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0-or-later ou nenhuma — veja `copier.yml`). O `--trust` é necessário porque o template roda tarefas pós-geração (`git init`, `uv sync`, `pre-commit install`) automaticamente.
+Copier will ask for `package_name`, `package_module`, `description`, `author_name`, `author_email`, `github_user`, `python_version`, `year` and `license` (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0-or-later or none — see `copier.yml`). `--trust` is required because the template runs post-generation tasks (`git init`, `uv sync`, `pre-commit install`) automatically.
 
-Para atualizar um projeto já gerado quando o template mudar:
+To update an already-generated project when the template changes:
 
 ```bash
 copier update
 ```
 
-No GitHub do projeto gerado, configure os secrets `RELEASE_TOKEN` (PAT com permissão de push/release) e `PYPI_TOKEN` (se for publicar no PyPI).
+On the generated project's GitHub repo, set the `RELEASE_TOKEN` secret (a PAT with push/release permission) and `PYPI_TOKEN` (if publishing to PyPI).
 
-## O que vem incluído (no projeto gerado)
+## What's included (in the generated project)
 
-- `.pre-commit-config.yaml` — ruff (lint + format), mypy, interrogate, conventional-pre-commit, cobertura via pytest.
-- `pyproject.toml` — dependências dev, config de coverage/interrogate/mypy/ruff, e `[tool.semantic_release]` já apontando pro padrão de versionamento em `pyproject.toml` + `__init__.py`.
-- `.github/workflows/ci.yml` — commitlint, testes com cobertura, lint (ruff).
-- `.github/workflows/release.yml` — python-semantic-release na branch `main`, com publish opcional no PyPI.
+- `.pre-commit-config.yaml` — ruff (lint + format), mypy, interrogate, conventional-pre-commit, coverage via pytest.
+- `pyproject.toml` — dev dependencies, coverage/interrogate/mypy/ruff config, and `[tool.semantic_release]` already pointing at the versioning source in `pyproject.toml` + `__init__.py`.
+- `.github/workflows/ci.yml` — commitlint, tests with coverage, lint (ruff).
+- `.github/workflows/release.yml` — python-semantic-release on the `main` branch, with optional PyPI publish.
 - `commitlint.config.cjs` — Conventional Commits.
-- `CONTRIBUTING.md`, `.gitignore`, `LICENSE` (conforme escolhido), `mkdocs.yml` + `docs/`.
+- `CONTRIBUTING.md`, `.gitignore`, `LICENSE` (as chosen), `mkdocs.yml` + `docs/`.
 
-## Versionamento do template
+## Versioning the template
 
-O Copier versiona pelo **tags git do repositório do template** (não por um número em arquivo): `copier copy` usa a última tag por padrão, e `copier update` aplica o diff entre a tag registrada no `.copier-answers.yml` do projeto gerado e a mais nova.
+Copier versions by the **git tags of the template repository** (not a number in a file): `copier copy` uses the latest tag by default, and `copier update` applies the diff between the tag recorded in the generated project's `.copier-answers.yml` and the newest one.
 
-Commits neste repo seguem Conventional Commits (`fix:`, `feat:`, etc). A cada push na `main`, o workflow `.github/workflows/release.yml` (raiz) roda o `python-semantic-release` em modo tag-only: cria a próxima tag `vX.Y.Z` e atualiza o `CHANGELOG.md` (raiz) automaticamente — sem build/publish, já que o template não é um pacote.
+Commits in this repo follow Conventional Commits (`fix:`, `feat:`, etc). On every push to `main`, the `.github/workflows/release.yml` workflow (root) runs `python-semantic-release` in tag-only mode: it creates the next `vX.Y.Z` tag and updates `CHANGELOG.md` (root) automatically — no build/publish, since the template itself isn't a package.
 
-Para fixar uma versão específica do template ao gerar:
+To pin a specific template version when generating:
 
 ```bash
-copier copy --trust --vcs-ref vX.Y.Z gh:omadson/python-template destino/
+copier copy --trust --vcs-ref vX.Y.Z gh:omadson/python-template destination/
 ```
 
-Para atualizar um projeto já gerado para a versão mais nova do template: `copier update` (dentro do projeto gerado).
+To update an already-generated project to the newest template version: `copier update` (inside the generated project).
 
-## Estrutura deste repositório
+## Repository structure
 
-- `copier.yml` — perguntas do template.
-- `template/` — conteúdo copiado para os novos projetos (arquivos `*.jinja` são renderizados; os demais são copiados como estão).
-- `pyproject.toml` (raiz) — config do `python-semantic-release` para versionar o *template em si* (tag-only, não copiado para projetos gerados).
-- `.github/workflows/release.yml` (raiz) — gera as tags/CHANGELOG do template a cada push na `main`.
+- `copier.yml` — the template's questions.
+- `template/` — content copied into new projects (`*.jinja` files are rendered; everything else is copied as-is).
+- `pyproject.toml` (root) — `python-semantic-release` config to version *the template itself* (tag-only, not copied into generated projects).
+- `.github/workflows/release.yml` (root) — generates the template's tags/CHANGELOG on every push to `main`.
