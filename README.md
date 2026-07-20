@@ -38,6 +38,21 @@ On the generated project's GitHub repo, set the `RELEASE_TOKEN` secret (a PAT wi
 └── uv.lock
 ```
 
+Plus a few dotfiles not shown above: `.github/workflows/`, `.gitignore`, `.pre-commit-config.yaml`, `.python-version`, `.copier-answers.yml`.
+
+What matters in each:
+
+- **`pyproject.toml`** — project metadata, dev dependencies, and tool config: `[tool.ruff]` (lint + format), `[tool.mypy]`, `[tool.coverage.report]`, `[tool.interrogate]` (docstring coverage), and `[tool.semantic_release]` (reads the version from `my_package/__init__.py`).
+- **`my_package/__init__.py`** — holds `__version__`, the single source of truth that `python-semantic-release` bumps on release.
+- **`.pre-commit-config.yaml`** — hooks that run on every commit: ruff, mypy, interrogate, conventional-commit message linting, and a local hook that runs `pytest --cov`.
+- **`.github/workflows/ci.yml`** — runs on pull requests: commitlint, tests with coverage, ruff.
+- **`.github/workflows/release.yml`** — runs on push to `main`: computes the next version from Conventional Commits, tags, updates the changelog, and optionally publishes to PyPI.
+- **`commitlint.config.cjs`** — enforces Conventional Commits (paired with the `conventional-pre-commit` hook and the CI `commitlint` job).
+- **`mkdocs.yml` + `docs/`** — docs site config and content (built with `mkdocs-material` + `mkdocstrings`).
+- **`LICENSE`** — whichever license you picked when generating (or absent, if you picked none).
+- **`.copier-answers.yml`** — the answers you gave Copier, used later by `copier update` to reapply template changes.
+- **`tests/test_version.py`** — the one test the template ships with, just asserting `__version__` is set.
+
 ## Versioning the template
 
 Copier versions by the **git tags of the template repository** (not a number in a file): `copier copy` uses the latest tag by default, and `copier update` applies the diff between the tag recorded in the generated project's `.copier-answers.yml` and the newest one.
