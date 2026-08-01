@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.1.1 (2026-08-01)
+
+### Bug Fixes
+
+- Stop asking for LICENSE year, derive it at generation time
+  ([`fc42a51`](https://github.com/omadson/python-template/commit/fc42a5149c4ad1e481f817cf96ea9f05b0dd1673))
+
+Copyright year no longer needs a prompt or a stale hardcoded default; a post-gen task fills __YEAR__
+  in LICENSE with the current year.
+
+
 ## v0.1.0 (2026-08-01)
 
 ### Bug Fixes
