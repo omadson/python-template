@@ -6,7 +6,16 @@
 
 ```bash
 uv sync
-uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
+uv run pre-commit install --hook-type pre-commit{% if project_type in ["package", "cli"] %} --hook-type commit-msg{% endif %}
 ```
+{% if project_type == "cli" %}
+Run it with `uv run {{ package_name }}`.
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, etc.) — version and changelog (`docs/CHANGELOG.md`) are generated automatically via python-semantic-release.
+{%- elif project_type == "script" %}
+Run it with `uv run main.py`.
+{%- elif project_type == "data-science" %}
+Explore the data in `notebooks/exploration.{% if ds_notebook == "jupyter" %}ipynb{% else %}py{% endif %}`.
+{%- else %}
+Commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, etc.) — version and changelog (`docs/CHANGELOG.md`) are generated automatically via python-semantic-release.
+{%- endif %}

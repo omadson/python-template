@@ -7,6 +7,25 @@ _tasks:
   - "uv sync"
   - "uv run pre-commit install --hook-type pre-commit --hook-type commit-msg"
 
+project_type:
+  type: str
+  help: "Project type"
+  choices:
+    Package (installable library): package
+    CLI application: cli
+    Script (single runnable file): script
+    Data science: data-science
+  default: package
+
+ds_notebook:
+  type: str
+  help: "Notebook tool"
+  when: "{{ project_type == 'data-science' }}"
+  choices:
+    Jupyter: jupyter
+    marimo: marimo
+  default: jupyter
+
 package_name:
   type: str
   help: "Package/project name (e.g. my-package)"

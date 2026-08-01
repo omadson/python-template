@@ -9,7 +9,16 @@ uv tool install copier  # or: pipx install copier
 copier copy --trust gh:omadson/python-template destination/
 ```
 
-Copier will ask for `package_name`, `package_module`, `description`, `author_name`, `author_email`, `github_user`, `python_version`, `year` and `license` (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0-or-later or none — see `copier.yml`). `--trust` is required because the template runs post-generation tasks (`git init`, `uv sync`, `pre-commit install`) automatically.
+The first question is **`project_type`**, and it drives the rest of the generated structure:
+
+- **package** — installable library: versioned module, semantic-release, PyPI publish, mkdocs site, commitlint.
+- **cli** — same as package, plus a [Typer](https://typer.tiangolo.com/) app (`{{ package_module }}/cli.py`) wired up as `[project.scripts]`.
+- **script** — a single runnable `main.py` at the root, no module, no build backend, no release machinery.
+- **data-science** — an importable module plus `data/{raw,processed}/` and `notebooks/`, with pandas/numpy/matplotlib/seaborn/scikit-learn; also asks `ds_notebook` (Jupyter or marimo) for the starter notebook format.
+
+`script` and `data-science` skip semantic-release, PyPI publishing, mkdocs and commitlint — just ruff, mypy and pytest.
+
+Copier also asks `package_name`, `package_module`, `description`, `author_name`, `author_email`, `github_user`, `python_version`, `year` and `license` (MIT, Apache-2.0, BSD-3-Clause, GPL-3.0-or-later or none — see `copier.yml`). `--trust` is required because the template runs post-generation tasks (`git init`, `uv sync`, `pre-commit install`) automatically.
 
 To update an already-generated project when the template changes:
 
@@ -20,6 +29,9 @@ copier update
 On the generated project's GitHub repo, set the `RELEASE_TOKEN` secret (a PAT with push/release permission) and `PYPI_TOKEN` (if publishing to PyPI).
 
 ## Structure
+
+The tree below is for `project_type: package` (also what `cli` looks like, plus
+`cli.py` and `[project.scripts]`):
 
 ```
 .
@@ -35,6 +47,41 @@ On the generated project's GitHub repo, set the `RELEASE_TOKEN` secret (a PAT wi
 ├── README.md
 ├── tests
 │   └── test_version.py
+└── uv.lock
+```
+
+`script` drops the module, `docs/`, `mkdocs.yml`, `commitlint.config.cjs`,
+`CONTRIBUTING.md` and `.github/workflows/release.yml`, and adds `main.py`
+instead:
+
+```
+.
+├── LICENSE
+├── main.py
+├── pyproject.toml
+├── README.md
+├── tests
+│   └── test_main.py
+└── uv.lock
+```
+
+`data-science` keeps the module (no `__version__`, not released) and the same
+trimmed-down machinery as `script`, plus `data/` and `notebooks/`:
+
+```
+.
+├── data
+│   ├── raw
+│   └── processed
+├── LICENSE
+├── my_package
+│   └── __init__.py
+├── notebooks
+│   └── exploration.ipynb   # or exploration.py, if ds_notebook = marimo
+├── pyproject.toml
+├── README.md
+├── tests
+│   └── test_smoke.py
 └── uv.lock
 ```
 

@@ -27,6 +27,7 @@ repos:
     hooks:
       - id: mypy
         args: [--ignore-missing-imports]
+{%- if project_type in ["package", "cli"] %}
 -   repo: https://github.com/compilerla/conventional-pre-commit
     rev: 'v4.4.0'
     hooks:
@@ -37,11 +38,12 @@ repos:
     hooks:
       - id: interrogate
         args: [-vv, --fail-under=80, --config=pyproject.toml]
+{%- endif %}
 -   repo: local
     hooks:
       - id: pytest coverage
         name: Check pytest coverage
-        entry: uv run pytest --cov={{ package_module }}
+        entry: uv run pytest{% if project_type in ["package", "cli", "data-science"] %} --cov={{ package_module }}{% endif %}
         pass_filenames: false
         language: system
         types: [python]

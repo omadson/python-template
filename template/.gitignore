@@ -4,6 +4,10 @@
 *.so
 .ipynb_checkpoints/
 
+# data (keep folder structure)
+data/*
+!data/**/.gitkeep
+
 # Packages
 *.egg
 *.egg-info

@@ -18,11 +18,31 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = []
-
+dependencies = [
+{%- if project_type == "cli" %}
+    "typer>=0.12,<1",
+{%- elif project_type == "data-science" %}
+    "pandas>=2.2,<3",
+    "numpy>=1.26,<3",
+    "matplotlib>=3.8,<4",
+    "seaborn>=0.13,<1",
+    "scikit-learn>=1.4,<2",
+    {% if ds_notebook == "jupyter" -%}
+    "jupyter>=1.0,<2",
+    {% else -%}
+    "marimo>=0.9,<1",
+    {% endif -%}
+{%- endif %}
+]
+{% if project_type == "cli" %}
+[project.scripts]
+{{ package_name }} = "{{ package_module }}.cli:app"
+{% endif %}
 [project.urls]
 Repository = "https://github.com/{{ github_user }}/{{ package_name }}"
+{% if project_type in ["package", "cli"] -%}
 Documentation = "https://{{ package_name }}.readthedocs.io/en/latest/"
+{% endif %}
 
 [dependency-groups]
 dev = [
@@ -31,16 +51,21 @@ dev = [
     "pytest-cov>=4.1.0,<5",
     "ruff>=0.9,<1",
     "mypy>=1.9.0,<2",
+{%- if project_type in ["package", "cli"] %}
     "python-semantic-release>=9.2.0,<10",
     "interrogate>=1.5.0,<2",
     "mkdocs>=1.5.3,<2",
     "mkdocs-material>=9.5.14,<10",
     "mkdocstrings>=0.24.1,<0.25",
+{%- endif %}
 ]
 
 [tool.uv]
 default-groups = "all"
-
+{% if project_type == "script" -%}
+package = false
+{% endif %}
+{% if project_type in ["package", "cli", "data-science"] -%}
 [tool.uv.build-backend]
 module-name = ["{{ package_module }}"]
 module-root = ""
@@ -49,8 +74,9 @@ source-include = [{% if license != "none" %}"LICENSE"{% endif %}]
 [build-system]
 requires = ["uv_build>=0.9.17,<0.10.0"]
 build-backend = "uv_build"
+{% endif %}
 
-
+{% if project_type in ["package", "cli"] -%}
 [tool.semantic_release]
 version_variables = [
     '{{ package_module }}/__init__.py:__version__',
@@ -67,6 +93,7 @@ upload_to_vcs_release = true
 
 [tool.semantic_release.changelog]
 changelog_file = "docs/CHANGELOG.md"
+{% endif %}
 
 [tool.mypy]
 
@@ -77,10 +104,15 @@ target-version = "py39"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP"]
 
-[tool.coverage.report]
-omit = ['{{ package_module }}/__init__.py']
-fail_under = 70
+[tool.pytest.ini_options]
+pythonpath = ["."]
 
+[tool.coverage.report]
+{% if project_type != "script" -%}
+omit = ['{{ package_module }}/__init__.py']
+{% endif -%}
+fail_under = 70
+{% if project_type in ["package", "cli"] %}
 [tool.interrogate]
 ignore-init-method = true
 ignore-init-module = false
@@ -100,3 +132,4 @@ quiet = false
 whitelist-regex = []
 color = true
 omit-covered-files = false
+{% endif %}

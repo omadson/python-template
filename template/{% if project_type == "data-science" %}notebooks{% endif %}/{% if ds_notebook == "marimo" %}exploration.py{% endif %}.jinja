@@ -1,0 +1,21 @@
+import marimo
+
+app = marimo.App()
+
+
+@app.cell
+def _():
+    import pandas as pd
+
+    return (pd,)
+
+
+@app.cell
+def _(pd):
+    df = pd.DataFrame({"a": [1, 2, 3]})
+    df
+    return
+
+
+if __name__ == "__main__":
+    app.run()
