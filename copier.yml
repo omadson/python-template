@@ -3,6 +3,7 @@ _subdirectory: template
 _templates_suffix: ".jinja"
 
 _tasks:
+  - "python3 -c \"import pathlib,datetime; p=pathlib.Path('LICENSE'); p.exists() and p.write_text(p.read_text().replace('__YEAR__', str(datetime.date.today().year)))\""
   - "git init -q"
   - "uv sync"
   - "uv run pre-commit install --hook-type pre-commit --hook-type commit-msg"
@@ -63,10 +64,6 @@ github_user:
 python_version:
   type: str
   default: "3.13"
-
-year:
-  type: int
-  default: 2026
 
 license:
   type: str
